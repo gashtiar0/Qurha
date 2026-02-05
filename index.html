@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>سیستەمی قورعە | سۆشیاڵ میدیا</title>
+    
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --success: #10b981;
+            --border: #e5e7eb;
+            --drawer-width: 280px;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 15px;
+            padding-bottom: 100px;
+            overflow-x: hidden; /* Prevent scroll when drawer opens */
+        }
+
+        .container { max-width: 800px; margin: 0 auto; transition: 0.3s; }
+
+        /* --- Header Stats --- */
+        .header-dash {
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+            position: relative;
+        }
+        
+        /* Menu Button */
+        .menu-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px; /* Left side because RTL puts start on Right */
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu-btn:hover { background: rgba(255,255,255,0.3); }
+
+        .header-dash h2 { margin: 0 0 15px 0; text-align: center; font-size: 1.5rem; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+        .stat-box { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
+        .stat-val { display: block; font-weight: bold; font-size: 1.1rem; }
+        .stat-lbl { font-size: 0.75rem; opacity: 0.9; }
+
+        /* --- Toolbar --- */
+        .toolbar {
+            display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px;
+        }
+        .tool-btn {
+            background: white; border: 1px solid var(--border); padding: 8px 15px;
+            border-radius: 8px; font-size: 0.9rem; white-space: nowrap; cursor: pointer;
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        /* --- Input Section --- */
+        .control-panel {
+            background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .input-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        .input-group { flex: 1; }
+        label { display: block; font-size: 0.8rem; color: var(--text-light); margin-bottom: 5px; }
+        input, select {
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;
+            box-sizing: border-box; outline: none; font-family: inherit;
+        }
+
+        /* --- Detailed Card Design --- */
+        .card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+            position: relative;
+        }
+        .card.focused { border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(37, 99, 235, 0.15); background: #f0f9ff; }
+        .card.blurred { opacity: 0.6; filter: grayscale(1); }
+        .card-header { background: #f9fafb; padding: 10px 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .rank-tag { background: var(--primary); color: white; padding: 3px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; }
+        .card-body { padding: 15px; }
+        .name-input { width: 100%; border: none; background: transparent; font-size: 1.1rem; font-weight: bold; color: var(--text-dark); border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; background: #f8fafc; padding: 10px; border-radius: 8px; font-size: 0.85rem; }
+        .info-item { display: flex; flex-direction: column; }
+        .info-label { color: var(--text-light); font-size: 0.75rem; }
+        .info-value { font-weight: bold; color: var(--text-dark); }
+        .highlight-val { color: var(--success); }
+        .card-footer { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); }
+        .status-btn { border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+        .st-paid { background: #dcfce7; color: #166534; }
+        .st-pending { background: #fee2e2; color: #991b1b; }
+
+        /* --- DRAWER STYLES --- */
+        .drawer-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000;
+            opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .drawer-overlay.open { opacity: 1; visibility: visible; }
+
+        .drawer {
+            position: fixed; top: 0; right: -300px; /* Start hidden off-screen */
+            width: var(--drawer-width); height: 100%;
+            background: white; z-index: 1001;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
+        }
+        .drawer.open { right: 0; }
+
+        .drawer-header {
+            background: var(--primary); color: white;
+            padding: 30px 20px; text-align: center;
+        }
+        .profile-img {
+            width: 80px; height: 80px; background: rgba(255,255,255,0.2);
+            border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; border: 2px solid rgba(255,255,255,0.5);
+        }
+        .drawer-body { padding: 20px; flex: 1; overflow-y: auto; }
+        
+        .social-link {
+            display: flex; align-items: center; gap: 15px;
+            padding: 12px; margin-bottom: 10px;
+            background: #f8fafc; border-radius: 10px;
+            text-decoration: none; color: var(--text-dark);
+            font-weight: bold; transition: 0.2s;
+        }
+        .social-link:hover { background: #eff6ff; color: var(--primary); transform: translateX(-5px); }
+        .social-icon { width: 30px; text-align: center; font-size: 1.2rem; }
+        
+        /* Social Colors */
+        .fa-facebook { color: #1877F2; }
+        .fa-instagram { color: #E4405F; }
+        .fa-snapchat { color: #FFFC00; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
+        .fa-tiktok { color: #000000; }
+        .fa-telegram { color: #0088cc; }
+        .fa-globe { color: var(--text-light); }
+
+        .drawer-footer {
+            padding: 15px; text-align: center; font-size: 0.8rem; color: var(--text-light);
+            border-top: 1px solid var(--border);
+        }
+
+        /* --- PDF Print Template (Hidden) --- */
+        #print-container {
+            position: fixed; top: -9999px; left: -9999px;
+            width: 210mm; background: white; padding: 20mm; box-sizing: border-box;
+        }
+        .print-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .print-table th, .print-table td { border: 1px solid #000; padding: 8px; text-align: center; }
+        .print-table th { background: #eee; }
+
+        /* --- Bottom Bar --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: white; padding: 12px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex; gap: 10px; z-index: 100; box-sizing: border-box;
+        }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; color: white; cursor: pointer; display: flex; justify-content: center; gap: 5px; }
+        .btn-blue { background: var(--primary); }
+        .btn-dark { background: #374151; }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center; }
+        .modal-content { background:white; padding:20px; border-radius:10px; width:90%; max-width:400px; text-align:center; }
+        .spin-tags { display:flex; flex-wrap:wrap; gap:5px; justify-content:center; margin:15px 0; }
+        .tag { background:#eee; padding:5px 10px; border-radius:15px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+    <div class="drawer" id="side-drawer">
+        <div class="drawer-header">
+            <div class="profile-img"><i class="fas fa-user"></i></div>
+            <h3 style="margin:0;">هەژمارەکانمان</h3>
+            <p style="margin:5px 0 0; opacity:0.8; font-size:0.9rem;">گەشتیار یوسف</p>
+        </div>
+        <div class="drawer-body">
+            <a href="https://www.facebook.com/share/184eur7eX8/" target="_blank" class="social-link">
+                <i class="fab fa-facebook social-icon"></i> فەیسبووک
+            </a>
+            <a href="https://www.instagram.com/g4shtiar3601?igsh=MWJlczE1ejI3ZmM2bw==" target="_blank" class="social-link">
+                <i class="fab fa-instagram social-icon"></i> ئینستاگرام
+            </a>
+            <a href="https://www.snapchat.com/add/i4m.g4shtiar?share_id=I_ucMYQ3eus&locale=en-GB" target="_blank" class="social-link">
+                <i class="fab fa-snapchat social-icon"></i> سناپ چات
+            </a>
+            <a href="https://www.tiktok.com/@professor.kurdish?_r=1&_t=ZS-93fc8z3Nzsd" target="_blank" class="social-link">
+                <i class="fab fa-tiktok social-icon"></i> تیکتۆک
+            </a>
+            <a href="https://t.me/professorkurdish" target="_blank" class="social-link">
+                <i class="fab fa-telegram social-icon"></i> تێلیگرام
+            </a>
+            <a href="#" target="_blank" class="social-link">
+                <i class="fas fa-globe social-icon"></i> وێبسایت
+            </a>
+        </div>
+        <div class="drawer-footer">
+            &copy; سیستەمی قورعەی زیرەک<br>Version 5.0
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header-dash">
+            <button class="menu-btn" onclick="openDrawer()"><i class="fas fa-bars"></i></button>
+            <h2>سیستەمی قورعە</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-val" id="stat-participants">0</span>
+                    <span class="stat-lbl">بەشداربوو</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-val" id="stat-individual">0</span>
+                    <span class="stat-lbl">پارەی تاک</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-val" id="stat-total">0</span>
+                    <span class="stat-lbl">کۆی مانگانە</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button class="tool-btn" onclick="addParticipant()"><i class="fas fa-plus"></i> زیادکردنی ناوەکان</button>
+            <button class="tool-btn" onclick="openSpin()"><i class="fas fa-random"></i> هەڵبژاردنی هەڕەمەکی</button>
+            <button class="tool-btn" onclick="exportJSON()"><i class="fas fa-download"></i> پاشەوکەتکردن</button>
+            <label class="tool-btn">
+                <i class="fas fa-upload"></i> گەڕاندنەوەی داتا
+                <input type="file" hidden onchange="importJSON(this)">
+            </label>
+        </div>
+
+        <div class="control-panel">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>بڕی پارەی مانگانە (بۆ هەر کەسێک)</label>
+                    <input type="text" id="amount" placeholder="100,000" oninput="formatMoney(this); updateUI()">
+                </div>
+                <div class="input-group">
+                    <label>بەرواری دەستپێکردن</label>
+                    <input type="date" id="start-date" onchange="updateUI()">
+                </div>
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-eye"></i> دیاریکردنی مانگ (Focus)</label>
+                <select id="focus-month" onchange="updateUI()"></select>
+            </div>
+        </div>
+
+        <div id="list-container"></div>
+    </div>
+
+    <div id="print-container">
+        <div style="text-align:center; margin-bottom:20px;">
+            <h1 style="margin:0;">ڕاپۆرتی سیستەمی قورعە</h1>
+            <p id="print-date">بەروار: ...</p>
+        </div>
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th style="width:5%">#</th>
+                    <th>مانگ</th>
+                    <th>ناوی بەشداربوو</th>
+                    <th>ژ.بەشداربوو</th>
+                    <th>بڕی پارەی تاک</th>
+                    <th>کۆی گشتی (وەرگیراو)</th>
+                    <th>دۆخ</th>
+                </tr>
+            </thead>
+            <tbody id="print-tbody">
+                </tbody>
+        </table>
+        <div style="margin-top:20px; font-size:10px;">
+            * ئەم ڕاپۆرتە بە شێوەی ئۆتۆماتیکی دروستکراوە.
+        </div>
+    </div>
+
+    <div id="spin-modal" class="modal">
+        <div class="modal-content">
+            <h3>تێکەڵکردنی ناوەکان</h3>
+            <div id="spin-area" class="spin-tags"></div>
+            <button class="btn btn-blue" onclick="runSpin()">دەستپێکردن</button>
+            <button class="btn btn-dark" style="margin-top:10px" onclick="document.getElementById('spin-modal').style.display='none'">داخستن</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="btn btn-blue" onclick="generatePDF()"><i class="fas fa-file-pdf"></i> PDF دروستکردن</button>
+        <button class="btn btn-dark" onclick="saveData(true)"><i class="fas fa-save"></i> خەزنکردن</button>
+    </div>
+
+    <script>
+        const kurdishMonths = ["کانوونی دووەم", "شوبات", "ئازار", "نیسان", "ئایار", "حوزەیران", "تەمموز", "ئاب", "ئەیلوول", "تشرینی یەکەم", "تشرینی دووەم", "کانوونی یەکەم"];
+        const ordinals = ["یەکەم", "دووەم", "سێیەم", "چوارەم", "پێنجەم", "شەشەم", "حەوتەم", "هەشتەم", "نۆیەم", "دەیەم", "یازدەیەم", "دوازدەیەم", "سێزدەیەم", "چواردەیەم", "پازدەیەم"];
+        
+        let participants = [];
+
+        window.onload = function() {
+            loadData();
+            if(!document.getElementById('start-date').value) {
+                document.getElementById('start-date').valueAsDate = new Date();
+            }
+            updateUI();
+        };
+
+        // --- Drawer Logic ---
+        function openDrawer() {
+            document.getElementById('side-drawer').classList.add('open');
+            document.getElementById('drawer-overlay').classList.add('open');
+        }
+        function closeDrawer() {
+            document.getElementById('side-drawer').classList.remove('open');
+            document.getElementById('drawer-overlay').classList.remove('open');
+        }
+
+        // --- Core Logic ---
+        function addParticipant() {
+            let name = prompt("ناوی بەشداربوو بنووسە:");
+            if(name) {
+                participants.push({ id: Date.now(), name: name, paid: false });
+                updateUI();
+                saveData();
+            }
+        }
+
+        function updateUI() {
+            const list = document.getElementById('list-container');
+            list.innerHTML = '';
+            
+            const amountInput = document.getElementById('amount').value.replace(/,/g, '');
+            const amountPerPerson = parseFloat(amountInput) || 0;
+            const count = participants.length;
+            const totalPot = amountPerPerson * count;
+            const startDate = new Date(document.getElementById('start-date').value || new Date());
+            
+            const focusSelect = document.getElementById('focus-month');
+            const currentFocus = focusSelect.value;
+            focusSelect.innerHTML = '<option value="all">هەموو مانگەکان</option>';
+
+            document.getElementById('stat-participants').innerText = count;
+            document.getElementById('stat-individual').innerText = amountPerPerson.toLocaleString();
+            document.getElementById('stat-total').innerText = totalPot.toLocaleString();
+
+            participants.forEach((p, index) => {
+                let d = new Date(startDate);
+                d.setMonth(startDate.getMonth() + index);
+                let monthStr = `${kurdishMonths[d.getMonth()]} ${d.getFullYear()}`;
+                
+                let opt = document.createElement('option');
+                opt.value = index;
+                opt.text = `${monthStr} - ${p.name}`;
+                focusSelect.appendChild(opt);
+
+                let isFocused = (currentFocus == index);
+                let isBlurred = (currentFocus !== "all" && currentFocus != index);
+                let cardClass = `card ${isFocused ? 'focused' : ''} ${isBlurred ? 'blurred' : ''}`;
+
+                const card = document.createElement('div');
+                card.className = cardClass;
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="rank-tag">ڕیزبەندی: ${ordinals[index] || index+1}</span>
+                        <div style="font-size:0.85rem; color:#666;">
+                            <i class="far fa-calendar-alt"></i> ${monthStr}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <input class="name-input" value="${p.name}" placeholder="ناو..." onchange="updateName(${index}, this.value)">
+                        
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">ژمارەی بەشداربووان</span>
+                                <span class="info-value">${count} کەس</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">بڕی پارەی تاک</span>
+                                <span class="info-value">${amountPerPerson.toLocaleString()}</span>
+                            </div>
+                            <div class="info-item" style="grid-column: span 2; margin-top:5px; border-top:1px solid #eee; padding-top:5px;">
+                                <span class="info-label">کۆی گشتی (وەردەگرێت)</span>
+                                <span class="info-value highlight-val">${totalPot.toLocaleString()} IQD</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="status-btn ${p.paid ? 'st-paid' : 'st-pending'}" onclick="toggleStatus(${index})">
+                            ${p.paid ? '<i class="fas fa-check"></i> وەرگیراوە' : '<i class="fas fa-clock"></i> وەرنەگیراوە'}
+                        </button>
+                        <i class="fas fa-trash" style="color:#ef4444; cursor:pointer;" onclick="removeP(${index})"></i>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+            
+            if(currentFocus) focusSelect.value = currentFocus;
+        }
+
+        // --- PDF Generation ---
+        function generatePDF() {
+            const tbody = document.getElementById('print-tbody');
+            tbody.innerHTML = '';
+            
+            const amountInput = document.getElementById('amount').value.replace(/,/g, '');
+            const amountPerPerson = parseFloat(amountInput) || 0;
+            const totalPot = amountPerPerson * participants.length;
+            const startDate = new Date(document.getElementById('start-date').value || new Date());
+            const focusVal = document.getElementById('focus-month').value;
+
+            document.getElementById('print-date').innerText = `بەروار: ${new Date().toLocaleDateString('en-GB')}`;
+
+            participants.forEach((p, index) => {
+                if(focusVal !== "all" && focusVal != index) return;
+
+                let d = new Date(startDate);
+                d.setMonth(startDate.getMonth() + index);
+                
+                let row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${kurdishMonths[d.getMonth()]} ${d.getFullYear()}</td>
+                        <td style="font-weight:bold; font-size:14px;">${p.name}</td>
+                        <td>${participants.length}</td>
+                        <td>${amountPerPerson.toLocaleString()}</td>
+                        <td style="font-weight:bold;">${totalPot.toLocaleString()}</td>
+                        <td>${p.paid ? "وەرگیراوە" : "وەرنەگیراوە"}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            const element = document.getElementById('print-container');
+            
+            html2canvas(element, { scale: 2 }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('Quraa_Full_Report.pdf');
+            });
+        }
+
+        // --- Helpers ---
+        function updateName(index, val) { participants[index].name = val; saveData(); }
+        function toggleStatus(index) { participants[index].paid = !participants[index].paid; updateUI(); saveData(); }
+        function removeP(index) { if(confirm('دڵنیایت؟')) { participants.splice(index, 1); updateUI(); saveData(); } }
+        function formatMoney(input) { let val = input.value.replace(/\D/g, ''); if(val) input.value = parseFloat(val).toLocaleString('en-US'); }
+
+        // --- Spin ---
+        function openSpin() {
+            document.getElementById('spin-modal').style.display = 'flex';
+            document.getElementById('spin-area').innerHTML = participants.map(p => `<span class="tag">${p.name}</span>`).join('');
+        }
+        function runSpin() {
+            let count = 0;
+            const interval = setInterval(() => {
+                participants.sort(() => Math.random() - 0.5);
+                document.getElementById('spin-area').innerHTML = participants.map(p => `<span class="tag">${p.name}</span>`).join('');
+                count++;
+                if(count > 15) {
+                    clearInterval(interval);
+                    updateUI();
+                    saveData();
+                    setTimeout(() => document.getElementById('spin-modal').style.display = 'none', 500);
+                }
+            }, 100);
+        }
+
+        // --- Data ---
+        function saveData(alertUser) {
+            const data = { list: participants, amt: document.getElementById('amount').value, date: document.getElementById('start-date').value };
+            localStorage.setItem('finalQuraa', JSON.stringify(data));
+            if(alertUser) alert("خەزنکرا");
+        }
+        function loadData() {
+            const d = JSON.parse(localStorage.getItem('finalQuraa'));
+            if(d) {
+                participants = d.list || [];
+                document.getElementById('amount').value = d.amt || '';
+                document.getElementById('start-date').value = d.date || '';
+            }
+        }
+        function exportJSON() {
+            const data = localStorage.getItem('finalQuraa');
+            const blob = new Blob([data], {type: "application/json"});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "backup.json"; a.click();
+        }
+        function importJSON(input) {
+            const reader = new FileReader();
+            reader.onload = (e) => { localStorage.setItem('finalQuraa', e.target.result); loadData(); updateUI(); alert("گەڕێنرایەوە"); };
+            reader.readAsText(input.files[0]);
+        }
+    </script>
+</body>
+</html>
