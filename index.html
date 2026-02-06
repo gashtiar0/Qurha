@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تراکنزەکشنەکانم</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Almarai:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
 
@@ -28,559 +27,1478 @@
             background: white;
             min-height: 100vh;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
-            padding-bottom: 50px;
         }
 
         /* Header */
         .header {
             background: white;
-            padding: 20px 25px;
+            padding: 20px 20px 15px;
+            border-bottom: 1px solid #E8EBF0;
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .header-top {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
 
-        .header h1 {
-            font-size: 22px;
-            color: #1a1a1a;
-            font-weight: 800;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .icon-btn {
-            background: none;
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #F5F7FA;
             border: none;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: 0.2s;
-        }
-
-        .icon-btn:hover {
-            background: #f0f0f0;
-        }
-
-        /* Summary Cards */
-        .summary-cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 20px 25px;
-        }
-
-        .card {
-            padding: 15px;
-            border-radius: 16px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card.debt {
-            background: linear-gradient(135deg, #FF6B6B 0%, #EE5253 100%);
-            box-shadow: 0 10px 20px rgba(238, 82, 83, 0.2);
-        }
-
-        .card.loan {
-            background: linear-gradient(135deg, #4834D4 0%, #686DE0 100%);
-            box-shadow: 0 10px 20px rgba(72, 52, 212, 0.2);
-        }
-
-        .card-title {
-            font-size: 13px;
-            opacity: 0.9;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .card-amount {
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .card-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 32px;
-            opacity: 0.2;
-        }
-
-        /* Net Total */
-        .net-total {
-            margin: 0 25px;
-            background: #2ed573;
-            padding: 15px;
-            border-radius: 16px;
-            color: white;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            box-shadow: 0 10px 20px rgba(46, 213, 115, 0.2);
-        }
-        
-        .net-total.negative {
-            background: #ff4757;
-            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.2);
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        /* Input Area */
-        .input-group {
-            padding: 25px;
+        .back-btn:hover {
+            background: #E8EBF0;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1A1D1F;
+            flex: 1;
+            text-align: center;
+            margin: 0 15px;
+        }
+
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 20px;
             background: white;
         }
 
-        .input-row {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 15px;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-card.income {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .stat-card.expense {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }
+
+        .stat-card.balance {
+            background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            padding: 20px 20px 15px;
+            background: white;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        .tabs {
             display: flex;
             gap: 10px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: #F5F7FA;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            color: #6B7280;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+        }
+
+        .tab.active {
+            background: #1A1D1F;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #E8EBF0;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .filter-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #E8EBF0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+            background: #F5F7FA;
+            color: #1A1D1F;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        .filter-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-filter {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+        }
+
+        .btn-apply {
+            background: #1A1D1F;
+            color: white;
+        }
+
+        .btn-apply:hover {
+            background: #2D3135;
+        }
+
+        .btn-reset {
+            background: #F5F7FA;
+            color: #6B7280;
+        }
+
+        .btn-reset:hover {
+            background: #E8EBF0;
+        }
+
+        /* Transactions List */
+        .transactions-section {
+            padding: 15px 20px 100px;
+            background: #F5F7FA;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
         }
 
-        input, select {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #f1f2f6;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: inherit;
-            outline: none;
-            transition: 0.3s;
-            background: #f8f9fa;
-        }
-
-        input:focus, select:focus {
-            border-color: #4834D4;
-            background: white;
-        }
-
-        .add-btn {
-            width: 100%;
-            padding: 16px;
-            background: #1e272e;
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
+        .section-title {
+            font-size: 18px;
             font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-
-        .add-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* List */
-        .list-header {
-            padding: 10px 25px;
-            color: #8395a7;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .transaction-list {
-            padding: 0 15px;
+            color: #1A1D1F;
         }
 
         .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 15px;
-            margin-bottom: 10px;
             background: white;
-            border-radius: 14px;
-            border: 1px solid #f1f2f6;
-            transition: 0.2s;
-        }
-
-        .transaction-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            border-color: transparent;
-        }
-
-        .t-info {
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 15px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
         }
 
-        .t-icon {
-            width: 45px;
-            height: 45px;
+        .transaction-item:hover {
+            border-color: #E8EBF0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .transaction-icon {
+            width: 48px;
+            height: 48px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
+            flex-shrink: 0;
         }
 
-        .t-debt .t-icon { background: #fff0f0; color: #ff4757; }
-        .t-loan .t-icon { background: #f0f0ff; color: #5352ed; }
+        .transaction-item.income .transaction-icon {
+            background: #D1FAE5;
+            color: #059669;
+        }
 
-        .t-details h3 {
+        .transaction-item.expense .transaction-icon {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .transaction-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .transaction-name {
             font-size: 16px;
-            color: #2f3542;
+            font-weight: 600;
+            color: #1A1D1F;
             margin-bottom: 4px;
         }
 
-        .t-details p {
-            font-size: 12px;
-            color: #a4b0be;
-        }
-
-        .t-amount {
-            font-size: 16px;
-            font-weight: 700;
-            text-align: left;
-        }
-
-        .amount-red { color: #ff4757; }
-        .amount-green { color: #2ed573; }
-
-        .delete-btn {
-            background: none;
-            border: none;
-            color: #dfe4ea;
-            margin-right: 15px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.2s;
-        }
-
-        .delete-btn:hover {
-            color: #ff4757;
-        }
-
-        /* Export Buttons */
-        .export-buttons {
-            display: flex;
-            gap: 10px;
-            padding: 0 25px 25px 25px;
-            justify-content: center;
-        }
-
-        .export-btn {
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: inherit;
-            font-weight: bold;
+        .transaction-meta {
+            font-size: 13px;
+            color: #9CA3AF;
             display: flex;
             align-items: center;
-            gap: 5px;
-            transition: 0.2s;
-            flex: 1; /* بۆ ئەوەی دوگمەکان بەیەک ئەندازە بن */
+            gap: 8px;
+        }
+
+        .transaction-note {
+            font-size: 12px;
+            color: #6B7280;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .transaction-right {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .transaction-amount {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .transaction-item.income .transaction-amount {
+            color: #059669;
+        }
+
+        .transaction-item.expense .transaction-amount {
+            color: #DC2626;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
+        .transaction-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+        }
+
+        .btn-edit {
+            background: #DBEAFE;
+            color: #1D4ED8;
+        }
+
+        .btn-edit:hover {
+            background: #BFDBFE;
+        }
+
+        .btn-delete {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .btn-delete:hover {
+            background: #FECACA;
+        }
+
+        /* Add Button */
+        .add-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 440px;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+            display: flex;
+            align-items: center;
             justify-content: center;
+            gap: 8px;
         }
 
-        .export-btn:active {
-            transform: scale(0.95);
-        }
-        
-        /* ٢. ستایلی دوگمەی PDF */
-        .pdf-btn {
-            background: #e74c3c;
+        .add-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
         }
 
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 24px 24px 0 0;
+            padding: 24px;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1A1D1F;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #F5F7FA;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            color: #6B7280;
+        }
+
+        .close-btn:hover {
+            background: #E8EBF0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #E8EBF0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+            background: #F5F7FA;
+            color: #1A1D1F;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-select option {
+            background: white;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 14px;
+            background: #F5F7FA;
+            border: none;
+            border-radius: 12px;
+            color: #6B7280;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+        }
+
+        .btn-cancel:hover {
+            background: #E8EBF0;
+        }
+
+        /* Export Button */
+        .export-section {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        .export-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-export {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #E8EBF0;
+            border-radius: 12px;
+            background: white;
+            color: #1A1D1F;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-export:hover {
+            background: #F5F7FA;
+            border-color: #667eea;
+        }
+
+        /* Search Box */
+        .search-section {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: 1px solid #E8EBF0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Tajawal', 'Almarai', sans-serif;
+            background: #F5F7FA url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%236B7280" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat 15px center;
+            color: #1A1D1F;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            color: #6B7280;
+        }
+
+        /* Responsive */
         @media (max-width: 480px) {
-            .container { box-shadow: none; }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .transaction-item {
+                flex-wrap: wrap;
+            }
+
+            .transaction-right {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-
-<div class="container" id="mainContainer">
-    <div class="header">
-        <h1>حیسابات 💰</h1>
-        <div class="header-actions">
-            <button class="icon-btn" onclick="restoreData()" title="گەڕاندنەوە">📥</button>
-            <button class="icon-btn" onclick="backupData()" title="پاشەکەوت">💾</button>
-            <button class="icon-btn" onclick="showInfo()">ℹ️</button>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <button class="back-btn">←</button>
+                <h1 class="header-title">تراکنزەکشنەکانم</h1>
+                <button class="menu-btn" onclick="toggleCurrency()" style="font-size: 13px; font-weight: 700; color: #667eea;">
+                    💱 <span id="currencyDisplay">IQD</span>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <div class="summary-cards">
-        <div class="card debt">
-            <div class="card-title">قەرزەکانم (دەیدەم)</div>
-            <div class="card-amount" id="totalDebt">0</div>
-            <div class="card-icon">📉</div>
-        </div>
-        <div class="card loan">
-            <div class="card-title">قەرز لای خەڵک (وەری دەگرم)</div>
-            <div class="card-amount" id="totalLoan">0</div>
-            <div class="card-icon">📈</div>
-        </div>
-    </div>
-
-    <div class="net-total" id="netTotalCard">
-        <span>کۆی گشتی (باڵانس)</span>
-        <span class="card-amount" id="netTotal">0</span>
-    </div>
-
-    <div class="input-group">
-        <div class="input-row">
-            <input type="text" id="tName" placeholder="ناوەکە (نم: مارکێت)">
-            <input type="number" id="tAmount" placeholder="بڕ (دینار)">
-        </div>
-        <div class="input-row">
-            <input type="date" id="tDate">
-            <select id="tType">
-                <option value="debt">قەرزی من (دەیدەم)</option>
-                <option value="loan">قەرزی خەڵک (وەری دەگرم)</option>
-            </select>
-        </div>
-        <button class="add-btn" onclick="addTransaction()">زیادکردن +</button>
-    </div>
-
-    <div class="list-header">
-        <span>لیستی مامەڵەکان</span>
-        <span id="listCount">0</span>
-    </div>
-
-    <div class="transaction-list" id="transactionList">
-        </div>
-    
-    <br>
-    
-    <div class="export-buttons">
-        <button class="export-btn" onclick="exportToExcel()">
-            Excel 📊
-        </button>
-        <button class="export-btn pdf-btn" onclick="exportToPDF()">
-            PDF 📄
-        </button>
-    </div>
-</div>
-
-<script>
-    // State
-    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-
-    // Initialize
-    document.getElementById('tDate').valueAsDate = new Date();
-    render();
-
-    // Functions
-    function addTransaction() {
-        const name = document.getElementById('tName').value;
-        const amount = parseFloat(document.getElementById('tAmount').value);
-        const type = document.getElementById('tType').value;
-        const date = document.getElementById('tDate').value;
-
-        if (!name || !amount) {
-            alert('تکایە ناو و بڕ پڕبکەرەوە');
-            return;
-        }
-
-        const transaction = {
-            id: Date.now(),
-            name,
-            amount,
-            type,
-            date
-        };
-
-        transactions.unshift(transaction);
-        saveAndRender();
-        
-        // Clear inputs
-        document.getElementById('tName').value = '';
-        document.getElementById('tAmount').value = '';
-        document.getElementById('tName').focus();
-    }
-
-    function deleteTransaction(id) {
-        if(confirm('دڵنیای لە سڕینەوەی ئەمە؟')) {
-            transactions = transactions.filter(t => t.id !== id);
-            saveAndRender();
-        }
-    }
-
-    function saveAndRender() {
-        localStorage.setItem('transactions', JSON.stringify(transactions));
-        render();
-    }
-
-    function render() {
-        const list = document.getElementById('transactionList');
-        const totalDebtEl = document.getElementById('totalDebt');
-        const totalLoanEl = document.getElementById('totalLoan');
-        const netTotalEl = document.getElementById('netTotal');
-        const netTotalCard = document.getElementById('netTotalCard');
-        const listCount = document.getElementById('listCount');
-
-        list.innerHTML = '';
-        
-        let debt = 0;
-        let loan = 0;
-
-        transactions.forEach(t => {
-            if (t.type === 'debt') debt += t.amount;
-            else loan += t.amount;
-
-            const item = document.createElement('div');
-            item.className = `transaction-item ${t.type === 'debt' ? 't-debt' : 't-loan'}`;
-            
-            // Format number with commas
-            const formattedAmount = t.amount.toLocaleString();
-
-            item.innerHTML = `
-                <div class="t-info">
-                    <div class="t-icon">
-                        ${t.type === 'debt' ? '📉' : '📈'}
-                    </div>
-                    <div class="t-details">
-                        <h3>${t.name}</h3>
-                        <p>${t.date}</p>
-                    </div>
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card income">
+                    <div class="stat-label">وەرگیراو</div>
+                    <div class="stat-value" id="totalIncome">0</div>
                 </div>
-                <div style="display:flex; align-items:center;">
-                    <span class="t-amount ${t.type === 'debt' ? 'amount-red' : 'amount-green'}">
-                        ${formattedAmount}
-                    </span>
-                    <button class="delete-btn" onclick="deleteTransaction(${t.id})">❌</button>
+                <div class="stat-card expense">
+                    <div class="stat-label">ناردراو</div>
+                    <div class="stat-value" id="totalExpense">0</div>
                 </div>
-            `;
-            list.appendChild(item);
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <div class="tabs">
+                <button class="tab active" onclick="filterByType('all')">هەموو</button>
+                <button class="tab" onclick="filterByType('income')">وەرگیراو</button>
+                <button class="tab" onclick="filterByType('expense')">ناردراو</button>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="filter-section">
+            <input type="text" id="searchInput" class="filter-input" placeholder="گەڕان بە ناو..." onkeyup="searchTransactions()" style="margin-bottom: 10px;">
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <input type="text" id="searchInput" class="search-input" placeholder="گەڕان بە ناو یان تێبینی..." oninput="searchTransactions()">
+        </div>
+
+        <!-- Export Section -->
+        <div class="export-section">
+            <div class="export-btns">
+                <button class="btn-export" onclick="exportToCSV()">
+                    <span>📊</span>
+                    <span>Excel</span>
+                </button>
+                <button class="btn-export" onclick="exportToPDF()">
+                    <span>📄</span>
+                    <span>PDF</span>
+                </button>
+                <button class="btn-export" onclick="printReport()">
+                    <span>🖨️</span>
+                    <span>چاپ</span>
+                </button>
+                <button class="btn-export" onclick="backupData()">
+                    <span>💾</span>
+                    <span>پاشکۆپی</span>
+                </button>
+            </div>
+            <div class="export-btns" style="margin-top: 10px;">
+                <button class="btn-export" onclick="document.getElementById('importFile').click()">
+                    <span>📥</span>
+                    <span>هاوردەکردنەوە</span>
+                </button>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+                <button class="btn-export" onclick="clearAllData()">
+                    <span>🗑️</span>
+                    <span>سڕینەوەی هەموو</span>
+                </button>
+                <button class="btn-export" onclick="showBackupInfo()">
+                    <span>ℹ️</span>
+                    <span>زانیاری</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-row">
+                <input type="date" id="dateFrom" class="filter-input" placeholder="لە">
+                <input type="date" id="dateTo" class="filter-input" placeholder="بۆ">
+            </div>
+            <div class="filter-btns">
+                <button class="btn-filter btn-apply" onclick="applyFilter()">فلتەر</button>
+                <button class="btn-filter btn-reset" onclick="resetFilter()">سڕینەوە</button>
+            </div>
+        </div>
+
+        <!-- Transactions List -->
+        <div class="transactions-section">
+            <div class="section-header">
+                <h2 class="section-title">مێژوو</h2>
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="sortTransactions()" style="padding: 8px 12px; background: #F5F7FA; border: none; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; color: #6B7280; font-family: 'Tajawal', 'Almarai', sans-serif;">🔄 ڕیزکردن</button>
+                    <button onclick="exportData()" style="padding: 8px 12px; background: #F5F7FA; border: none; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; color: #6B7280; font-family: 'Tajawal', 'Almarai', sans-serif;">📥 هەناردە</button>
+                </div>
+            </div>
+            <div id="transactionsList">
+                <!-- Transactions will be added here -->
+            </div>
+        </div>
+
+        <!-- Add Button -->
+        <button class="add-btn" onclick="openModal()">
+            <span>+</span>
+            <span>زیادکردنی تراکنزەکشن</span>
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div id="transactionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">تراکنزەکشنی نوێ</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="transactionForm">
+                <input type="hidden" id="editId">
+                
+                <div class="form-group">
+                    <label class="form-label">جۆر</label>
+                    <select id="type" class="form-select" required>
+                        <option value="income">وەرگیراو</option>
+                        <option value="expense">ناردراو</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">کەتیگۆری</label>
+                    <select id="category" class="form-select">
+                        <option value="">هەڵبژاردنی کەتیگۆری (ئیختیاری)</option>
+                        <option value="خواردن">🍔 خواردن</option>
+                        <option value="گواستنەوە">🚗 گواستنەوە</option>
+                        <option value="کڕین">🛒 کڕین</option>
+                        <option value="مووچە">💰 مووچە</option>
+                        <option value="فرۆشتن">💵 فرۆشتن</option>
+                        <option value="قەرز">🤝 قەرز</option>
+                        <option value="هیتر">📦 هیتر</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ناو</label>
+                    <input type="text" id="personName" class="form-input" required placeholder="ناوی کەس">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">بڕ (<span id="currencyLabel">IQD</span>)</label>
+                    <input type="number" id="amount" class="form-input" required placeholder="0" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">بەروار</label>
+                    <input type="date" id="date" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">تێبینی</label>
+                    <textarea id="note" class="form-textarea" placeholder="تێبینی (ئیختیاری)"></textarea>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="btn-submit">پاشەکەوت</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">پاشگەزبوونەوە</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        let currentFilter = 'all';
+        let sortOrder = 'desc';
+        let currency = localStorage.getItem('currency') || 'IQD'; // Default to IQD
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+            updateCurrencyDisplay();
+            displayTransactions();
+            updateStatistics();
         });
 
-        // Update summaries
-        totalDebtEl.innerText = debt.toLocaleString();
-        totalLoanEl.innerText = loan.toLocaleString();
-        
-        const net = loan - debt;
-        netTotalEl.innerText = net.toLocaleString() + ' IQD';
-        
-        // Change color based on status
-        if (net < 0) {
-            netTotalCard.classList.add('negative');
-            netTotalCard.style.background = '#ff4757';
-        } else {
-            netTotalCard.classList.remove('negative');
-            netTotalCard.style.background = '#2ed573';
+        // Toggle currency between IQD and USD
+        function toggleCurrency() {
+            currency = currency === 'IQD' ? 'USD' : 'IQD';
+            localStorage.setItem('currency', currency);
+            updateCurrencyDisplay();
+            displayTransactions();
+            updateStatistics();
         }
 
-        listCount.innerText = transactions.length;
-    }
-
-    // Export to Excel
-    function exportToExcel() {
-        if (transactions.length === 0) {
-            alert("هیچ داتایەک نییە بۆ ناردن!");
-            return;
+        // Update currency display in UI
+        function updateCurrencyDisplay() {
+            const symbol = currency === 'IQD' ? 'IQD' : '$';
+            document.getElementById('currencyDisplay').textContent = symbol;
+            if (document.getElementById('currencyLabel')) {
+                document.getElementById('currencyLabel').textContent = symbol;
+            }
         }
 
-        // Prepare data for Excel
-        const data = transactions.map(t => ({
-            "جۆر": t.type === 'debt' ? "قەرزی من (دەیدەم)" : "قەرزی خەڵک (وەری دەگرم)",
-            "ناو": t.name,
-            "بڕ (دینار)": t.amount,
-            "بەروار": t.date
-        }));
+        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('type').value;
+            const personName = document.getElementById('personName').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const date = document.getElementById('date').value;
+            const note = document.getElementById('note').value;
+            const editId = document.getElementById('editId').value;
 
-        const ws = XLSX.utils.json_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Hesabat");
-        
-        // Generate filename with date
-        const today = new Date().toISOString().slice(0,10);
-        XLSX.writeFile(wb, `Hesabat_Data_${today}.xlsx`);
-    }
+            if (editId) {
+                const index = transactions.findIndex(t => t.id === editId);
+                if (index !== -1) {
+                    transactions[index] = {
+                        id: editId,
+                        type,
+                        personName,
+                        amount,
+                        date,
+                        note,
+                        timestamp: transactions[index].timestamp
+                    };
+                }
+            } else {
+                const transaction = {
+                    id: Date.now().toString(),
+                    type,
+                    personName,
+                    amount,
+                    date,
+                    note,
+                    timestamp: Date.now()
+                };
+                transactions.push(transaction);
+            }
 
-    // ٤. فەنکشنی دروستکردنی PDF
-    function exportToPDF() {
-        if (transactions.length === 0) {
-            alert("هیچ داتایەک نییە بۆ کردن بە PDF!");
-            return;
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            closeModal();
+            displayTransactions();
+            updateStatistics();
+        });
+
+        function displayTransactions(filteredTransactions = null) {
+            const transactionsList = document.getElementById('transactionsList');
+            const dataToDisplay = filteredTransactions || transactions;
+
+            if (dataToDisplay.length === 0) {
+                transactionsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📊</div>
+                        <p class="empty-text">هیچ تراکنزەکشنێک نییە</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const sortedTransactions = [...dataToDisplay].sort((a, b) => {
+                if (sortOrder === 'desc') {
+                    return new Date(b.date) - new Date(a.date);
+                } else {
+                    return new Date(a.date) - new Date(b.date);
+                }
+            });
+
+            transactionsList.innerHTML = sortedTransactions.map(transaction => `
+                <div class="transaction-item ${transaction.type}">
+                    <div class="transaction-icon">
+                        ${transaction.type === 'income' ? '↓' : '↑'}
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">${transaction.personName}</div>
+                        <div class="transaction-meta">
+                            <span>${formatDate(transaction.date)}</span>
+                        </div>
+                        ${transaction.note ? `<div class="transaction-note">${transaction.note}</div>` : ''}
+                    </div>
+                    <div class="transaction-right">
+                        <div class="transaction-amount">
+                            ${transaction.type === 'income' ? '+' : '-'} ${formatMoney(transaction.amount)}
+                        </div>
+                        <div class="transaction-actions">
+                            <button class="btn-action btn-edit" onclick="editTransaction('${transaction.id}')">دەستکاری</button>
+                            <button class="btn-action btn-delete" onclick="deleteTransaction('${transaction.id}')">سڕینەوە</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        const element = document.querySelector('.container');
-        const opt = {
-            margin:       10,
-            filename:     'Hsabat_Report.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
+        function updateStatistics() {
+            const totalIncome = transactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + t.amount, 0);
 
-        html2pdf().set(opt).from(element).save();
-    }
+            const totalExpense = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
 
-    // Backup & Restore System
-    function backupData() {
-        const dataStr = JSON.stringify(transactions);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        
-        const exportFileDefaultName = `hsabat_backup_${new Date().toISOString().slice(0,10)}.json`;
+            document.getElementById('totalIncome').textContent = formatMoney(totalIncome);
+            document.getElementById('totalExpense').textContent = formatMoney(totalExpense);
+        }
 
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
-    }
+        function formatMoney(amount) {
+            const formatted = new Intl.NumberFormat('en-IQ', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+            
+            if (currency === 'USD') {
+                return '$' + formatted;
+            } else {
+                return formatted + ' IQD';
+            }
+        }
 
-    function restoreData() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        
-        input.onchange = e => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.readAsText(file, 'UTF-8');
-            reader.onload = readerEvent => {
-                try {
-                    const content = readerEvent.target.result;
-                    const parsedData = JSON.parse(content);
-                    
-                    if (Array.isArray(parsedData)) {
-                        if(confirm('دەتەوێت داتا کۆنەکان بسڕیتەوە (Replace) یان ئەمانە زیاد بکەیت (Merge)؟\n\nOK = جێگۆڕین (Replace)\nCancel = زیادکردن (Merge)')) {
-                            transactions = parsedData;
-                        } else {
-                            transactions = [...parsedData, ...transactions];
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        }
+
+        function openModal() {
+            document.getElementById('transactionModal').style.display = 'block';
+            document.getElementById('modalTitle').textContent = 'تراکنزەکشنی نوێ';
+            document.getElementById('transactionForm').reset();
+            document.getElementById('editId').value = '';
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+        }
+
+        function closeModal() {
+            document.getElementById('transactionModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('transactionModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        function editTransaction(id) {
+            const transaction = transactions.find(t => t.id === id);
+            if (!transaction) return;
+
+            document.getElementById('editId').value = transaction.id;
+            document.getElementById('type').value = transaction.type;
+            document.getElementById('personName').value = transaction.personName;
+            document.getElementById('amount').value = transaction.amount;
+            document.getElementById('date').value = transaction.date;
+            document.getElementById('note').value = transaction.note || '';
+
+            document.getElementById('modalTitle').textContent = 'دەستکاری';
+            document.getElementById('transactionModal').style.display = 'block';
+        }
+
+        function deleteTransaction(id) {
+            if (confirm('دڵنیایت؟')) {
+                transactions = transactions.filter(t => t.id !== id);
+                localStorage.setItem('transactions', JSON.stringify(transactions));
+                displayTransactions();
+                updateStatistics();
+            }
+        }
+
+        function filterByType(type) {
+            currentFilter = type;
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (type === 'all') {
+                displayTransactions();
+            } else {
+                const filtered = transactions.filter(t => t.type === type);
+                displayTransactions(filtered);
+            }
+        }
+
+        function applyFilter() {
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            let filtered = [...transactions];
+
+            if (dateFrom) {
+                filtered = filtered.filter(t => new Date(t.date) >= new Date(dateFrom));
+            }
+            if (dateTo) {
+                filtered = filtered.filter(t => new Date(t.date) <= new Date(dateTo));
+            }
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(t => t.type === currentFilter);
+            }
+
+            displayTransactions(filtered);
+
+            const totalIncome = filtered.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            const totalExpense = filtered.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            const balance = totalIncome - totalExpense;
+
+            document.getElementById('totalIncome').textContent = formatMoney(totalIncome);
+            document.getElementById('totalExpense').textContent = formatMoney(totalExpense);
+            document.getElementById('balance').textContent = formatMoney(balance);
+        }
+
+        function resetFilter() {
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            document.getElementById('searchInput').value = '';
+            currentFilter = 'all';
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.tab').classList.add('active');
+            displayTransactions();
+            updateStatistics();
+        }
+
+        // Search transactions
+        function searchTransactions() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (!searchTerm) {
+                displayTransactions();
+                return;
+            }
+
+            const filtered = transactions.filter(t => 
+                t.personName.toLowerCase().includes(searchTerm) ||
+                (t.note && t.note.toLowerCase().includes(searchTerm))
+            );
+            displayTransactions(filtered);
+        }
+
+        // Sort transactions
+        function sortTransactions() {
+            sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
+            displayTransactions();
+        }
+
+        // Export data as JSON
+        function exportData() {
+            const dataStr = JSON.stringify(transactions, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'transactions_' + new Date().toISOString().split('T')[0] + '.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Statistics by period
+        function getStatsByPeriod(period) {
+            const now = new Date();
+            let startDate;
+
+            switch(period) {
+                case 'today':
+                    startDate = new Date(now.setHours(0,0,0,0));
+                    break;
+                case 'week':
+                    startDate = new Date(now.setDate(now.getDate() - 7));
+                    break;
+                case 'month':
+                    startDate = new Date(now.setMonth(now.getMonth() - 1));
+                    break;
+                default:
+                    return null;
+            }
+
+            const filtered = transactions.filter(t => new Date(t.date) >= startDate);
+            const income = filtered.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            const expense = filtered.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            
+            return { income, expense, balance: income - expense };
+        }
+
+        // Export to CSV/Excel
+        function exportToCSV() {
+            if (transactions.length === 0) {
+                alert('هیچ داتایەک نییە بۆ هەناردن!');
+                return;
+            }
+
+            let csvContent = "جۆر,ناو,بڕ (IQD),کاشباک (IQD),بەروار,تێبینی\n";
+            
+            transactions.forEach(t => {
+                const type = t.type === 'income' ? 'وەرگیراو' : 'ناردراو';
+                const note = t.note ? t.note.replace(/,/g, '،') : '-';
+                const cashback = t.cashback || 0;
+                const row = `${type},${t.personName},${t.amount},${cashback},${formatDate(t.date)},"${note}"`;
+                csvContent += row + "\n";
+            });
+
+            // Add summary
+            const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            const totalCashback = transactions.reduce((sum, t) => sum + (t.cashback || 0), 0);
+            csvContent += `\nکۆی گشتی وەرگیراو,,${totalIncome},,,\n`;
+            csvContent += `کۆی گشتی ناردراو,,${totalExpense},,,\n`;
+            csvContent += `کۆی گشتی کاشباک,,,${totalCashback},,\n`;
+            csvContent += `باڵانس,,${totalIncome - totalExpense},,,\n`;
+            csvContent += `سوودی ڕاستەقینە,,${totalIncome - totalExpense + totalCashback},,,\n`;
+
+            const BOM = "\uFEFF";
+            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", `transactions_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert('فایلی Excel هەناردە کرا! ✅');
+        }
+
+        // Export to PDF
+        function exportToPDF() {
+            if (transactions.length === 0) {
+                alert('هیچ داتایەک نییە بۆ PDF!');
+                return;
+            }
+
+            // Use print functionality to create PDF
+            printReport();
+            
+            setTimeout(() => {
+                alert('💡 بۆ دروستکردنی PDF:\n\n1. لە پەنجەرەی چاپکردندا "Save as PDF" هەڵبژێرە\n2. یان "Microsoft Print to PDF" \n3. دوگمەی Save لێبدە\n\n✅ فایلی PDF دروست دەبێت!');
+            }, 500);
+        }
+
+        // Print report
+        function printReport() {
+            if (transactions.length === 0) {
+                alert('هیچ داتایەک نییە بۆ چاپکردن!');
+                return;
+            }
+
+            const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            const totalCashback = transactions.reduce((sum, t) => sum + (t.cashback || 0), 0);
+            const balance = totalIncome - totalExpense;
+            const netProfit = balance + totalCashback;
+
+            let printContent = `
+                <html dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>ڕاپۆرتی تراکنزەکشنەکان</title>
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap');
+                        body { 
+                            font-family: 'Tajawal', Arial; 
+                            padding: 30px; 
+                            direction: rtl;
                         }
-                        saveAndRender();
-                        alert('بە سەرکەوتوویی گەڕێنرایەوە!');
-                    } else {
-                        alert('فایلەکە هەڵەیە!');
-                    }
-                } catch (error) {
-                    alert('کێشەیەک هەیە لە خوێندنەوەی فایلەکە');
+                        h1 { 
+                            text-align: center; 
+                            color: #1A1D1F; 
+                            margin-bottom: 30px;
+                            border-bottom: 3px solid #667eea;
+                            padding-bottom: 15px;
+                        }
+                        .stats { 
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 15px;
+                            margin: 30px 0; 
+                            padding: 25px; 
+                            background: #F5F7FA; 
+                            border-radius: 12px; 
+                        }
+                        .stat { 
+                            text-align: center; 
+                            padding: 15px;
+                            background: white;
+                            border-radius: 10px;
+                        }
+                        .stat-label { 
+                            color: #6B7280; 
+                            font-size: 14px; 
+                            margin-bottom: 10px;
+                        }
+                        .stat-value { 
+                            font-size: 26px; 
+                            font-weight: 800; 
+                            margin-top: 8px; 
+                        }
+                        .income { color: #059669; }
+                        .expense { color: #DC2626; }
+                        .cashback { color: #f093fb; }
+                        table { 
+                            width: 100%; 
+                            border-collapse: collapse; 
+                            margin-top: 30px; 
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        }
+                        th, td { 
+                            padding: 14px; 
+                            text-align: right; 
+                            border-bottom: 1px solid #E8EBF0; 
+                        }
+                        th { 
+                            background: #1A1D1F; 
+                            color: white;
+                            font-weight: 700; 
+                        }
+                        tr:hover { background: #F5F7FA; }
+                        .footer { 
+                            text-align: center; 
+                            margin-top: 40px; 
+                            padding-top: 20px;
+                            border-top: 2px solid #E8EBF0;
+                            color: #6B7280; 
+                            font-size: 14px;
+                        }
+                        @media print {
+                            body { padding: 20px; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>📊 ڕاپۆرتی تراکنزەکشنەکان</h1>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-label">کۆی وەرگیراو</div>
+                            <div class="stat-value income">${formatMoney(totalIncome)}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">کۆی ناردراو</div>
+                            <div class="stat-value expense">${formatMoney(totalExpense)}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">باڵانس</div>
+                            <div class="stat-value" style="color: ${balance >= 0 ? '#059669' : '#DC2626'}">${formatMoney(balance)}</div>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-label">کۆی کاشباک</div>
+                            <div class="stat-value cashback">${formatMoney(totalCashback)}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">ڕێژەی کاشباک</div>
+                            <div class="stat-value">${totalExpense > 0 ? ((totalCashback / totalExpense) * 100).toFixed(1) : 0}%</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">سوودی ڕاستەقینە</div>
+                            <div class="stat-value" style="color: ${netProfit >= 0 ? '#059669' : '#DC2626'}">${formatMoney(netProfit)}</div>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>جۆر</th>
+                                <th>ناو</th>
+                                <th>بڕ</th>
+                                <th>کاشباک</th>
+                                <th>بەروار</th>
+                                <th>تێبینی</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            transactions.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+                const type = t.type === 'income' ? 'وەرگیراو ↓' : 'ناردراو ↑';
+                const amountClass = t.type === 'income' ? 'income' : 'expense';
+                const cashback = t.cashback || 0;
+                printContent += `
+                    <tr>
+                        <td><strong>${type}</strong></td>
+                        <td>${t.personName}</td>
+                        <td class="${amountClass}"><strong>${formatMoney(t.amount)}</strong></td>
+                        <td style="color: #f093fb;"><strong>${cashback > 0 ? formatMoney(cashback) : '-'}</strong></td>
+                        <td>${formatDate(t.date)}</td>
+                        <td>${t.note || '-'}</td>
+                    </tr>
+                `;
+            });
+
+            printContent += `
+                        </tbody>
+                    </table>
+                    <div class="footer">
+                        <p><strong>کۆی تراکنزەکشنەکان:</strong> ${transactions.length}</p>
+                        <p>چاپکراو لە: ${new Date().toLocaleDateString('ar')} - ${new Date().toLocaleTimeString('ar')}</p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const printWindow = window.open('', '', 'height=700,width=900');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (!transactions || transactions.length === 0) {
+                alert('هیچ داتایەک نییە بۆ سڕینەوە!');
+                return;
+            }
+
+            if (confirm('⚠️ ئاگاداری: دڵنیایت کە دەتەوێت هەموو داتاکان بسڕیتەوە؟\n\nئەم کارە ناگەڕێتەوە و هەموو ' + transactions.length + ' تراکنزەکشن دەسڕێنەوە!')) {
+                if (confirm('✋ دووبارە دڵنیابوونەوە:\n\nهەموو تراکنزەکشنەکان بە تەواوی دەسڕێنەوە!\n\nدەتەوێت بەردەوام بیت؟')) {
+                    const count = transactions.length;
+                    transactions = [];
+                    localStorage.removeItem('transactions');
+                    displayTransactions();
+                    updateStatistics();
+                    document.getElementById('searchInput').value = '';
+                    alert('✅ سەرکەوتوو!\n\n' + count + ' تراکنزەکشن سڕانەوە.');
                 }
             }
         }
-        input.click();
-    }
 
-    function showInfo() {
-        const info = `
-💡 ڕێنمایی بەکارهێنان:
+        // Backup data as JSON
+        function backupData() {
+            if (transactions.length === 0) {
+                alert('هیچ داتایەک نییە بۆ پاشکۆپی!');
+                return;
+            }
 
-🔴 قەرزەکانم (Debt): ئەو پارانەی تۆ قەرزاریت و دەبێت بیاندەیتەوە.
-🔵 قەرز لای خەڵک (Loan): ئەو پارانەی خەڵک قەرزاری تۆن.
+            const backupData = {
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                totalTransactions: transactions.length,
+                transactions: transactions
+            };
 
-💾 پاشەکەوت (Backup):
-   • دەتوانیت فایلێک دابگریت کە هەموو داتاکانی تێدایە
-   • بۆ کاتێک مۆبایل دەگۆڕیت یان دەتەوێت پاشەکەوتی بکەیت
+            const dataStr = JSON.stringify(backupData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            const fileName = 'backup_transactions_' + new Date().toISOString().split('T')[0] + '.json';
+            
+            link.href = url;
+            link.download = fileName;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            alert('✅ پاشکۆپی دروستکرا!\n\n' + transactions.length + ' تراکنزەکشن پاشەکەوت کرا.\n\nفایل: ' + fileName);
+        }
+
+        // Import data from JSON
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    const importedData = JSON.parse(content);
+                    
+                    // Validate data structure
+                    if (!importedData.transactions || !Array.isArray(importedData.transactions)) {
+                        throw new Error('فایلی نادروست!');
+                    }
+
+                    // Ask user if they want to merge or replace
+                    let mergeOption;
+                    if (transactions.length > 0) {
+                        mergeOption = confirm(
+                            '📊 ئێستا ' + transactions.length + ' تراکنزەکشنت هەیە.\n' +
+                            '📥 فایلەکە ' + importedData.transactions.length + ' تراکنزەکشنی تێدایە.\n\n' +
+                            '✅ دوگمەی OK: زیادکردن بۆ ئەوانەی ئێستا هەتە (یەکلایی کردنەوە)\n' +
+                            '❌ دوگمەی Cancel: جێگۆڕینکردنی هەموو داتاکان\n\n' +
+                            'ئایا دەتەوێت زیادیان بکەیت؟'
+                        );
+                    } else {
+                        mergeOption = false; // No existing data, just replace
+                    }
+
+                    if (mergeOption) {
+                        // Merge: add imported transactions to existing ones
+                        const existingIds = new Set(transactions.map(t => t.id));
+                        const newTransactions = importedData.transactions.filter(t => !existingIds.has(t.id));
+                        transactions = [...transactions, ...newTransactions];
+                        
+                        alert('✅ سەرکەوتوو!\n\n' + newTransactions.length + ' تراکنزەکشنی نوێ زیادکرا.\n' +
+                              'کۆی گشتی ئێستا: ' + transactions.length + ' تراکنزەکشن');
+                    } else {
+                        // Replace: overwrite all existing data
+                        if (transactions.length > 0) {
+                            const confirmed = confirm(
+                                '⚠️ ئاگاداری!\n\n' +
+                                'هەموو ' + transactions.length + ' تراکنزەکشنی ئێستات دەسڕێتەوە و\n' +
+                                importedData.transactions.length + ' تراکنزەکشنی نوێ دادەنرێت.\n\n' +
+                                'دڵنیایت؟'
+                            );
+                            if (!confirmed) {
+                                event.target.value = ''; // Reset file input
+                                return;
+                            }
+                        }
+                        
+                        transactions = importedData.transactions;
+                        alert('✅ سەرکەوتوو!\n\n' + transactions.length + ' تراکنزەکشن هاوردە کرانەوە.');
+                    }
+
+                    // Save to localStorage and update display
+                    localStorage.setItem('transactions', JSON.stringify(transactions));
+                    displayTransactions();
+                    updateStatistics();
+                    
+                } catch (error) {
+                    alert('❌ هەڵە!\n\nفایلەکە نادروستە یان تێکچووە.\n\nتکایە فایلێکی دروست هەڵبژێرە.');
+                    console.error('Import error:', error);
+                }
+                
+                // Reset file input
+                event.target.value = '';
+            };
+            
+            reader.readAsText(file);
+        }
+
+        // Show backup information
+        function showBackupInfo() {
+            const info = `
+📌 زانیاری پاشەکەوتکردنی داتا
+
+💾 پاشکۆپی (Backup):
+   • فایلێکی JSON دروست دەکات لە هەموو داتاکانت
+   • دەتوانیت لە کۆمپیوتەر یان کلاودت پاشەکەوتی بکەیت
    • ئەگەر داتاکانت لابچن، دەتوانیت بیانگەڕێنیتەوە
 
 📥 هاوردەکردنەوە (Import):
@@ -598,328 +1516,25 @@
 📊 ئێستا:
    • ${transactions.length} تراکنزەکشنت هەیە
    • کۆی داتا: ${(JSON.stringify(transactions).length / 1024).toFixed(2)} KB
-        `.trim();
-        
-        alert(info);
-    }
-</script>
+            `.trim();
+            
+            alert(info);
+        }
 
-</body>
-</html>
-ووک
-            </a>
-            <a href="https://www.instagram.com/g4shtiar3601?igsh=MWJlczE1ejI3ZmM2bw==" target="_blank" class="social-link">
-                <i class="fab fa-instagram social-icon"></i> ئینستاگرام
-            </a>
-            <a href="https://www.snapchat.com/add/i4m.g4shtiar?share_id=I_ucMYQ3eus&locale=en-GB" target="_blank" class="social-link">
-                <i class="fab fa-snapchat social-icon"></i> سناپ چات
-            </a>
-            <a href="https://www.tiktok.com/@professor.kurdish?_r=1&_t=ZS-93fc8z3Nzsd" target="_blank" class="social-link">
-                <i class="fab fa-tiktok social-icon"></i> تیکتۆک
-            </a>
-            <a href="https://t.me/professorkurdish" target="_blank" class="social-link">
-                <i class="fab fa-telegram social-icon"></i> تێلیگرام
-            </a>
-            <a href="#" target="_blank" class="social-link">
-                <i class="fas fa-globe social-icon"></i> وێبسایت
-            </a>
-        </div>
-        <div class="drawer-footer">
-            &copy; سیستەمی قورعەی زیرەک<br>Version 5.0
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="header-dash">
-            <button class="menu-btn" onclick="openDrawer()"><i class="fas fa-bars"></i></button>
-            <h2>سیستەمی قورعە</h2>
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <span class="stat-val" id="stat-participants">0</span>
-                    <span class="stat-lbl">بەشداربوو</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-val" id="stat-individual">0</span>
-                    <span class="stat-lbl">پارەی تاک</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-val" id="stat-total">0</span>
-                    <span class="stat-lbl">کۆی مانگانە</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="toolbar">
-            <button class="tool-btn" onclick="addParticipant()"><i class="fas fa-plus"></i> زیادکردنی ناوەکان</button>
-            <button class="tool-btn" onclick="openSpin()"><i class="fas fa-random"></i> هەڵبژاردنی هەڕەمەکی</button>
-            <button class="tool-btn" onclick="exportJSON()"><i class="fas fa-download"></i> پاشەوکەتکردن</button>
-            <label class="tool-btn">
-                <i class="fas fa-upload"></i> گەڕاندنەوەی داتا
-                <input type="file" hidden onchange="importJSON(this)">
-            </label>
-        </div>
-
-        <div class="control-panel">
-            <div class="input-row">
-                <div class="input-group">
-                    <label>بڕی پارەی مانگانە (بۆ هەر کەسێک)</label>
-                    <input type="text" id="amount" placeholder="100,000" oninput="formatMoney(this); updateUI()">
-                </div>
-                <div class="input-group">
-                    <label>بەرواری دەستپێکردن</label>
-                    <input type="date" id="start-date" onchange="updateUI()">
-                </div>
-            </div>
-            <div class="input-group">
-                <label><i class="fas fa-eye"></i> دیاریکردنی مانگ (Focus)</label>
-                <select id="focus-month" onchange="updateUI()"></select>
-            </div>
-        </div>
-
-        <div id="list-container"></div>
-    </div>
-
-    <div id="print-container">
-        <div style="text-align:center; margin-bottom:20px;">
-            <h1 style="margin:0;">ڕاپۆرتی سیستەمی قورعە</h1>
-            <p id="print-date">بەروار: ...</p>
-        </div>
-        <table class="print-table">
-            <thead>
-                <tr>
-                    <th style="width:5%">#</th>
-                    <th>مانگ</th>
-                    <th>ناوی بەشداربوو</th>
-                    <th>ژ.بەشداربوو</th>
-                    <th>بڕی پارەی تاک</th>
-                    <th>کۆی گشتی (وەرگیراو)</th>
-                    <th>دۆخ</th>
-                </tr>
-            </thead>
-            <tbody id="print-tbody">
-                </tbody>
-        </table>
-        <div style="margin-top:20px; font-size:10px;">
-            * ئەم ڕاپۆرتە بە شێوەی ئۆتۆماتیکی دروستکراوە.
-        </div>
-    </div>
-
-    <div id="spin-modal" class="modal">
-        <div class="modal-content">
-            <h3>تێکەڵکردنی ناوەکان</h3>
-            <div id="spin-area" class="spin-tags"></div>
-            <button class="btn btn-blue" onclick="runSpin()">دەستپێکردن</button>
-            <button class="btn btn-dark" style="margin-top:10px" onclick="document.getElementById('spin-modal').style.display='none'">داخستن</button>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <button class="btn btn-blue" onclick="generatePDF()"><i class="fas fa-file-pdf"></i> PDF دروستکردن</button>
-        <button class="btn btn-dark" onclick="saveData(true)"><i class="fas fa-save"></i> خەزنکردن</button>
-    </div>
-
-    <script>
-        const kurdishMonths = ["کانوونی دووەم", "شوبات", "ئازار", "نیسان", "ئایار", "حوزەیران", "تەمموز", "ئاب", "ئەیلوول", "تشرینی یەکەم", "تشرینی دووەم", "کانوونی یەکەم"];
-        const ordinals = ["یەکەم", "دووەم", "سێیەم", "چوارەم", "پێنجەم", "شەشەم", "حەوتەم", "هەشتەم", "نۆیەم", "دەیەم", "یازدەیەم", "دوازدەیەم", "سێزدەیەم", "چواردەیەم", "پازدەیەم"];
-        
-        let participants = [];
-
-        window.onload = function() {
-            loadData();
-            if(!document.getElementById('start-date').value) {
-                document.getElementById('start-date').valueAsDate = new Date();
+        // Auto-save reminder (optional)
+        let lastBackupDate = localStorage.getItem('lastBackupDate');
+        if (!lastBackupDate) {
+            localStorage.setItem('lastBackupDate', new Date().toISOString());
+        } else {
+            const daysSinceBackup = Math.floor((Date.now() - new Date(lastBackupDate)) / (1000 * 60 * 60 * 24));
+            if (daysSinceBackup > 30 && transactions.length > 0) {
+                setTimeout(() => {
+                    if (confirm('💾 بیرهێنانەوە!\n\nزیاتر لە ' + daysSinceBackup + ' ڕۆژە پاشکۆپی دروست نەکراوە.\n\nئایا دەتەوێت ئێستا پاشکۆپی دروست بکەیت؟')) {
+                        backupData();
+                        localStorage.setItem('lastBackupDate', new Date().toISOString());
+                    }
+                }, 2000);
             }
-            updateUI();
-        };
-
-        // --- Drawer Logic ---
-        function openDrawer() {
-            document.getElementById('side-drawer').classList.add('open');
-            document.getElementById('drawer-overlay').classList.add('open');
-        }
-        function closeDrawer() {
-            document.getElementById('side-drawer').classList.remove('open');
-            document.getElementById('drawer-overlay').classList.remove('open');
-        }
-
-        // --- Core Logic ---
-        function addParticipant() {
-            let name = prompt("ناوی بەشداربوو بنووسە:");
-            if(name) {
-                participants.push({ id: Date.now(), name: name, paid: false });
-                updateUI();
-                saveData();
-            }
-        }
-
-        function updateUI() {
-            const list = document.getElementById('list-container');
-            list.innerHTML = '';
-            
-            const amountInput = document.getElementById('amount').value.replace(/,/g, '');
-            const amountPerPerson = parseFloat(amountInput) || 0;
-            const count = participants.length;
-            const totalPot = amountPerPerson * count;
-            const startDate = new Date(document.getElementById('start-date').value || new Date());
-            
-            const focusSelect = document.getElementById('focus-month');
-            const currentFocus = focusSelect.value;
-            focusSelect.innerHTML = '<option value="all">هەموو مانگەکان</option>';
-
-            document.getElementById('stat-participants').innerText = count;
-            document.getElementById('stat-individual').innerText = amountPerPerson.toLocaleString();
-            document.getElementById('stat-total').innerText = totalPot.toLocaleString();
-
-            participants.forEach((p, index) => {
-                let d = new Date(startDate);
-                d.setMonth(startDate.getMonth() + index);
-                let monthStr = `${kurdishMonths[d.getMonth()]} ${d.getFullYear()}`;
-                
-                let opt = document.createElement('option');
-                opt.value = index;
-                opt.text = `${monthStr} - ${p.name}`;
-                focusSelect.appendChild(opt);
-
-                let isFocused = (currentFocus == index);
-                let isBlurred = (currentFocus !== "all" && currentFocus != index);
-                let cardClass = `card ${isFocused ? 'focused' : ''} ${isBlurred ? 'blurred' : ''}`;
-
-                const card = document.createElement('div');
-                card.className = cardClass;
-                card.innerHTML = `
-                    <div class="card-header">
-                        <span class="rank-tag">ڕیزبەندی: ${ordinals[index] || index+1}</span>
-                        <div style="font-size:0.85rem; color:#666;">
-                            <i class="far fa-calendar-alt"></i> ${monthStr}
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <input class="name-input" value="${p.name}" placeholder="ناو..." onchange="updateName(${index}, this.value)">
-                        
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <span class="info-label">ژمارەی بەشداربووان</span>
-                                <span class="info-value">${count} کەس</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">بڕی پارەی تاک</span>
-                                <span class="info-value">${amountPerPerson.toLocaleString()}</span>
-                            </div>
-                            <div class="info-item" style="grid-column: span 2; margin-top:5px; border-top:1px solid #eee; padding-top:5px;">
-                                <span class="info-label">کۆی گشتی (وەردەگرێت)</span>
-                                <span class="info-value highlight-val">${totalPot.toLocaleString()} IQD</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <button class="status-btn ${p.paid ? 'st-paid' : 'st-pending'}" onclick="toggleStatus(${index})">
-                            ${p.paid ? '<i class="fas fa-check"></i> وەرگیراوە' : '<i class="fas fa-clock"></i> وەرنەگیراوە'}
-                        </button>
-                        <i class="fas fa-trash" style="color:#ef4444; cursor:pointer;" onclick="removeP(${index})"></i>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-            
-            if(currentFocus) focusSelect.value = currentFocus;
-        }
-
-        // --- PDF Generation ---
-        function generatePDF() {
-            const tbody = document.getElementById('print-tbody');
-            tbody.innerHTML = '';
-            
-            const amountInput = document.getElementById('amount').value.replace(/,/g, '');
-            const amountPerPerson = parseFloat(amountInput) || 0;
-            const totalPot = amountPerPerson * participants.length;
-            const startDate = new Date(document.getElementById('start-date').value || new Date());
-            const focusVal = document.getElementById('focus-month').value;
-
-            document.getElementById('print-date').innerText = `بەروار: ${new Date().toLocaleDateString('en-GB')}`;
-
-            participants.forEach((p, index) => {
-                if(focusVal !== "all" && focusVal != index) return;
-
-                let d = new Date(startDate);
-                d.setMonth(startDate.getMonth() + index);
-                
-                let row = `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${kurdishMonths[d.getMonth()]} ${d.getFullYear()}</td>
-                        <td style="font-weight:bold; font-size:14px;">${p.name}</td>
-                        <td>${participants.length}</td>
-                        <td>${amountPerPerson.toLocaleString()}</td>
-                        <td style="font-weight:bold;">${totalPot.toLocaleString()}</td>
-                        <td>${p.paid ? "وەرگیراوە" : "وەرنەگیراوە"}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-
-            const element = document.getElementById('print-container');
-            
-            html2canvas(element, { scale: 2 }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('Quraa_Full_Report.pdf');
-            });
-        }
-
-        // --- Helpers ---
-        function updateName(index, val) { participants[index].name = val; saveData(); }
-        function toggleStatus(index) { participants[index].paid = !participants[index].paid; updateUI(); saveData(); }
-        function removeP(index) { if(confirm('دڵنیایت؟')) { participants.splice(index, 1); updateUI(); saveData(); } }
-        function formatMoney(input) { let val = input.value.replace(/\D/g, ''); if(val) input.value = parseFloat(val).toLocaleString('en-US'); }
-
-        // --- Spin ---
-        function openSpin() {
-            document.getElementById('spin-modal').style.display = 'flex';
-            document.getElementById('spin-area').innerHTML = participants.map(p => `<span class="tag">${p.name}</span>`).join('');
-        }
-        function runSpin() {
-            let count = 0;
-            const interval = setInterval(() => {
-                participants.sort(() => Math.random() - 0.5);
-                document.getElementById('spin-area').innerHTML = participants.map(p => `<span class="tag">${p.name}</span>`).join('');
-                count++;
-                if(count > 15) {
-                    clearInterval(interval);
-                    updateUI();
-                    saveData();
-                    setTimeout(() => document.getElementById('spin-modal').style.display = 'none', 500);
-                }
-            }, 100);
-        }
-
-        // --- Data ---
-        function saveData(alertUser) {
-            const data = { list: participants, amt: document.getElementById('amount').value, date: document.getElementById('start-date').value };
-            localStorage.setItem('finalQuraa', JSON.stringify(data));
-            if(alertUser) alert("خەزنکرا");
-        }
-        function loadData() {
-            const d = JSON.parse(localStorage.getItem('finalQuraa'));
-            if(d) {
-                participants = d.list || [];
-                document.getElementById('amount').value = d.amt || '';
-                document.getElementById('start-date').value = d.date || '';
-            }
-        }
-        function exportJSON() {
-            const data = localStorage.getItem('finalQuraa');
-            const blob = new Blob([data], {type: "application/json"});
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "backup.json"; a.click();
-        }
-        function importJSON(input) {
-            const reader = new FileReader();
-            reader.onload = (e) => { localStorage.setItem('finalQuraa', e.target.result); loadData(); updateUI(); alert("گەڕێنرایەوە"); };
-            reader.readAsText(input.files[0]);
         }
     </script>
 </body>
