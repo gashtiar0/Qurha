@@ -1,220 +1,612 @@
 <!DOCTYPE html>
-<html lang="ckb" dir="rtl">
+<html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>سیستەمی قورعە | سۆشیاڵ میدیا</title>
-    
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تراکنزەکشنەکانم</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root {
-            --primary: #2563eb;
-            --bg: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --success: #10b981;
-            --border: #e5e7eb;
-            --drawer-width: 280px;
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Almarai:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Vazirmatn', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 15px;
-            padding-bottom: 100px;
-            overflow-x: hidden; /* Prevent scroll when drawer opens */
+            font-family: 'Tajawal', 'Almarai', 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #F5F7FA;
+            min-height: 100vh;
+            padding: 0;
+            direction: rtl;
         }
 
-        .container { max-width: 800px; margin: 0 auto; transition: 0.3s; }
-
-        /* --- Header Stats --- */
-        .header-dash {
-            background: linear-gradient(135deg, var(--primary), #1d4ed8);
-            color: white;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
-            position: relative;
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+            padding-bottom: 50px;
         }
-        
-        /* Menu Button */
-        .menu-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px; /* Left side because RTL puts start on Right */
-            background: rgba(255,255,255,0.2);
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 25px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            color: #1a1a1a;
+            font-weight: 800;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: none;
             border: none;
-            color: white;
-            font-size: 1.2rem;
-            padding: 8px 12px;
-            border-radius: 8px;
+            font-size: 20px;
             cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
             transition: 0.2s;
         }
-        .menu-btn:hover { background: rgba(255,255,255,0.3); }
 
-        .header-dash h2 { margin: 0 0 15px 0; text-align: center; font-size: 1.5rem; }
-        
-        .stats-grid {
+        .icon-btn:hover {
+            background: #f0f0f0;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            text-align: center;
-        }
-        .stat-box { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
-        .stat-val { display: block; font-weight: bold; font-size: 1.1rem; }
-        .stat-lbl { font-size: 0.75rem; opacity: 0.9; }
-
-        /* --- Toolbar --- */
-        .toolbar {
-            display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px;
-        }
-        .tool-btn {
-            background: white; border: 1px solid var(--border); padding: 8px 15px;
-            border-radius: 8px; font-size: 0.9rem; white-space: nowrap; cursor: pointer;
-            display: flex; align-items: center; gap: 5px;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px 25px;
         }
 
-        /* --- Input Section --- */
-        .control-panel {
-            background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .input-row { display: flex; gap: 10px; margin-bottom: 15px; }
-        .input-group { flex: 1; }
-        label { display: block; font-size: 0.8rem; color: var(--text-light); margin-bottom: 5px; }
-        input, select {
-            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;
-            box-sizing: border-box; outline: none; font-family: inherit;
-        }
-
-        /* --- Detailed Card Design --- */
         .card {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-bottom: 15px;
-            overflow: hidden;
-            transition: 0.3s;
+            padding: 15px;
+            border-radius: 16px;
+            color: white;
             position: relative;
+            overflow: hidden;
         }
-        .card.focused { border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(37, 99, 235, 0.15); background: #f0f9ff; }
-        .card.blurred { opacity: 0.6; filter: grayscale(1); }
-        .card-header { background: #f9fafb; padding: 10px 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .rank-tag { background: var(--primary); color: white; padding: 3px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; }
-        .card-body { padding: 15px; }
-        .name-input { width: 100%; border: none; background: transparent; font-size: 1.1rem; font-weight: bold; color: var(--text-dark); border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; background: #f8fafc; padding: 10px; border-radius: 8px; font-size: 0.85rem; }
-        .info-item { display: flex; flex-direction: column; }
-        .info-label { color: var(--text-light); font-size: 0.75rem; }
-        .info-value { font-weight: bold; color: var(--text-dark); }
-        .highlight-val { color: var(--success); }
-        .card-footer { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); }
-        .status-btn { border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
-        .st-paid { background: #dcfce7; color: #166534; }
-        .st-pending { background: #fee2e2; color: #991b1b; }
 
-        /* --- DRAWER STYLES --- */
-        .drawer-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 1000;
-            opacity: 0; visibility: hidden; transition: 0.3s;
+        .card.debt {
+            background: linear-gradient(135deg, #FF6B6B 0%, #EE5253 100%);
+            box-shadow: 0 10px 20px rgba(238, 82, 83, 0.2);
         }
-        .drawer-overlay.open { opacity: 1; visibility: visible; }
 
-        .drawer {
-            position: fixed; top: 0; right: -300px; /* Start hidden off-screen */
-            width: var(--drawer-width); height: 100%;
-            background: white; z-index: 1001;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column;
+        .card.loan {
+            background: linear-gradient(135deg, #4834D4 0%, #686DE0 100%);
+            box-shadow: 0 10px 20px rgba(72, 52, 212, 0.2);
         }
-        .drawer.open { right: 0; }
 
-        .drawer-header {
-            background: var(--primary); color: white;
-            padding: 30px 20px; text-align: center;
+        .card-title {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
-        .profile-img {
-            width: 80px; height: 80px; background: rgba(255,255,255,0.2);
-            border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; border: 2px solid rgba(255,255,255,0.5);
+
+        .card-amount {
+            font-size: 24px;
+            font-weight: 800;
         }
-        .drawer-body { padding: 20px; flex: 1; overflow-y: auto; }
+
+        .card-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 32px;
+            opacity: 0.2;
+        }
+
+        /* Net Total */
+        .net-total {
+            margin: 0 25px;
+            background: #2ed573;
+            padding: 15px;
+            border-radius: 16px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(46, 213, 115, 0.2);
+        }
         
-        .social-link {
-            display: flex; align-items: center; gap: 15px;
-            padding: 12px; margin-bottom: 10px;
-            background: #f8fafc; border-radius: 10px;
-            text-decoration: none; color: var(--text-dark);
-            font-weight: bold; transition: 0.2s;
+        .net-total.negative {
+            background: #ff4757;
+            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.2);
         }
-        .social-link:hover { background: #eff6ff; color: var(--primary); transform: translateX(-5px); }
-        .social-icon { width: 30px; text-align: center; font-size: 1.2rem; }
+
+        /* Input Area */
+        .input-group {
+            padding: 25px;
+            background: white;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #f1f2f6;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.3s;
+            background: #f8f9fa;
+        }
+
+        input:focus, select:focus {
+            border-color: #4834D4;
+            background: white;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 16px;
+            background: #1e272e;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .add-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* List */
+        .list-header {
+            padding: 10px 25px;
+            color: #8395a7;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .transaction-list {
+            padding: 0 15px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #f1f2f6;
+            transition: 0.2s;
+        }
+
+        .transaction-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border-color: transparent;
+        }
+
+        .t-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .t-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .t-debt .t-icon { background: #fff0f0; color: #ff4757; }
+        .t-loan .t-icon { background: #f0f0ff; color: #5352ed; }
+
+        .t-details h3 {
+            font-size: 16px;
+            color: #2f3542;
+            margin-bottom: 4px;
+        }
+
+        .t-details p {
+            font-size: 12px;
+            color: #a4b0be;
+        }
+
+        .t-amount {
+            font-size: 16px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .amount-red { color: #ff4757; }
+        .amount-green { color: #2ed573; }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #dfe4ea;
+            margin-right: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+
+        .delete-btn:hover {
+            color: #ff4757;
+        }
+
+        /* Export Buttons */
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            padding: 0 25px 25px 25px;
+            justify-content: center;
+        }
+
+        .export-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.2s;
+            flex: 1; /* بۆ ئەوەی دوگمەکان بەیەک ئەندازە بن */
+            justify-content: center;
+        }
+
+        .export-btn:active {
+            transform: scale(0.95);
+        }
         
-        /* Social Colors */
-        .fa-facebook { color: #1877F2; }
-        .fa-instagram { color: #E4405F; }
-        .fa-snapchat { color: #FFFC00; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
-        .fa-tiktok { color: #000000; }
-        .fa-telegram { color: #0088cc; }
-        .fa-globe { color: var(--text-light); }
-
-        .drawer-footer {
-            padding: 15px; text-align: center; font-size: 0.8rem; color: var(--text-light);
-            border-top: 1px solid var(--border);
+        /* ٢. ستایلی دوگمەی PDF */
+        .pdf-btn {
+            background: #e74c3c;
         }
 
-        /* --- PDF Print Template (Hidden) --- */
-        #print-container {
-            position: fixed; top: -9999px; left: -9999px;
-            width: 210mm; background: white; padding: 20mm; box-sizing: border-box;
+        @media (max-width: 480px) {
+            .container { box-shadow: none; }
         }
-        .print-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .print-table th, .print-table td { border: 1px solid #000; padding: 8px; text-align: center; }
-        .print-table th { background: #eee; }
-
-        /* --- Bottom Bar --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: white; padding: 12px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            display: flex; gap: 10px; z-index: 100; box-sizing: border-box;
-        }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; color: white; cursor: pointer; display: flex; justify-content: center; gap: 5px; }
-        .btn-blue { background: var(--primary); }
-        .btn-dark { background: #374151; }
-
-        /* Modal Styles */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center; }
-        .modal-content { background:white; padding:20px; border-radius:10px; width:90%; max-width:400px; text-align:center; }
-        .spin-tags { display:flex; flex-wrap:wrap; gap:5px; justify-content:center; margin:15px 0; }
-        .tag { background:#eee; padding:5px 10px; border-radius:15px; }
-
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
-    <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-
-    <div class="drawer" id="side-drawer">
-        <div class="drawer-header">
-            <div class="profile-img"><i class="fas fa-user"></i></div>
-            <h3 style="margin:0;">هەژمارەکانمان</h3>
-            <p style="margin:5px 0 0; opacity:0.8; font-size:0.9rem;">گەشتیار یوسف</p>
+<div class="container" id="mainContainer">
+    <div class="header">
+        <h1>حیسابات 💰</h1>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="restoreData()" title="گەڕاندنەوە">📥</button>
+            <button class="icon-btn" onclick="backupData()" title="پاشەکەوت">💾</button>
+            <button class="icon-btn" onclick="showInfo()">ℹ️</button>
         </div>
-        <div class="drawer-body">
-            <a href="https://www.facebook.com/share/184eur7eX8/" target="_blank" class="social-link">
-                <i class="fab fa-facebook social-icon"></i> فەیسبووک
+    </div>
+
+    <div class="summary-cards">
+        <div class="card debt">
+            <div class="card-title">قەرزەکانم (دەیدەم)</div>
+            <div class="card-amount" id="totalDebt">0</div>
+            <div class="card-icon">📉</div>
+        </div>
+        <div class="card loan">
+            <div class="card-title">قەرز لای خەڵک (وەری دەگرم)</div>
+            <div class="card-amount" id="totalLoan">0</div>
+            <div class="card-icon">📈</div>
+        </div>
+    </div>
+
+    <div class="net-total" id="netTotalCard">
+        <span>کۆی گشتی (باڵانس)</span>
+        <span class="card-amount" id="netTotal">0</span>
+    </div>
+
+    <div class="input-group">
+        <div class="input-row">
+            <input type="text" id="tName" placeholder="ناوەکە (نم: مارکێت)">
+            <input type="number" id="tAmount" placeholder="بڕ (دینار)">
+        </div>
+        <div class="input-row">
+            <input type="date" id="tDate">
+            <select id="tType">
+                <option value="debt">قەرزی من (دەیدەم)</option>
+                <option value="loan">قەرزی خەڵک (وەری دەگرم)</option>
+            </select>
+        </div>
+        <button class="add-btn" onclick="addTransaction()">زیادکردن +</button>
+    </div>
+
+    <div class="list-header">
+        <span>لیستی مامەڵەکان</span>
+        <span id="listCount">0</span>
+    </div>
+
+    <div class="transaction-list" id="transactionList">
+        </div>
+    
+    <br>
+    
+    <div class="export-buttons">
+        <button class="export-btn" onclick="exportToExcel()">
+            Excel 📊
+        </button>
+        <button class="export-btn pdf-btn" onclick="exportToPDF()">
+            PDF 📄
+        </button>
+    </div>
+</div>
+
+<script>
+    // State
+    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+    // Initialize
+    document.getElementById('tDate').valueAsDate = new Date();
+    render();
+
+    // Functions
+    function addTransaction() {
+        const name = document.getElementById('tName').value;
+        const amount = parseFloat(document.getElementById('tAmount').value);
+        const type = document.getElementById('tType').value;
+        const date = document.getElementById('tDate').value;
+
+        if (!name || !amount) {
+            alert('تکایە ناو و بڕ پڕبکەرەوە');
+            return;
+        }
+
+        const transaction = {
+            id: Date.now(),
+            name,
+            amount,
+            type,
+            date
+        };
+
+        transactions.unshift(transaction);
+        saveAndRender();
+        
+        // Clear inputs
+        document.getElementById('tName').value = '';
+        document.getElementById('tAmount').value = '';
+        document.getElementById('tName').focus();
+    }
+
+    function deleteTransaction(id) {
+        if(confirm('دڵنیای لە سڕینەوەی ئەمە؟')) {
+            transactions = transactions.filter(t => t.id !== id);
+            saveAndRender();
+        }
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('transactions', JSON.stringify(transactions));
+        render();
+    }
+
+    function render() {
+        const list = document.getElementById('transactionList');
+        const totalDebtEl = document.getElementById('totalDebt');
+        const totalLoanEl = document.getElementById('totalLoan');
+        const netTotalEl = document.getElementById('netTotal');
+        const netTotalCard = document.getElementById('netTotalCard');
+        const listCount = document.getElementById('listCount');
+
+        list.innerHTML = '';
+        
+        let debt = 0;
+        let loan = 0;
+
+        transactions.forEach(t => {
+            if (t.type === 'debt') debt += t.amount;
+            else loan += t.amount;
+
+            const item = document.createElement('div');
+            item.className = `transaction-item ${t.type === 'debt' ? 't-debt' : 't-loan'}`;
+            
+            // Format number with commas
+            const formattedAmount = t.amount.toLocaleString();
+
+            item.innerHTML = `
+                <div class="t-info">
+                    <div class="t-icon">
+                        ${t.type === 'debt' ? '📉' : '📈'}
+                    </div>
+                    <div class="t-details">
+                        <h3>${t.name}</h3>
+                        <p>${t.date}</p>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center;">
+                    <span class="t-amount ${t.type === 'debt' ? 'amount-red' : 'amount-green'}">
+                        ${formattedAmount}
+                    </span>
+                    <button class="delete-btn" onclick="deleteTransaction(${t.id})">❌</button>
+                </div>
+            `;
+            list.appendChild(item);
+        });
+
+        // Update summaries
+        totalDebtEl.innerText = debt.toLocaleString();
+        totalLoanEl.innerText = loan.toLocaleString();
+        
+        const net = loan - debt;
+        netTotalEl.innerText = net.toLocaleString() + ' IQD';
+        
+        // Change color based on status
+        if (net < 0) {
+            netTotalCard.classList.add('negative');
+            netTotalCard.style.background = '#ff4757';
+        } else {
+            netTotalCard.classList.remove('negative');
+            netTotalCard.style.background = '#2ed573';
+        }
+
+        listCount.innerText = transactions.length;
+    }
+
+    // Export to Excel
+    function exportToExcel() {
+        if (transactions.length === 0) {
+            alert("هیچ داتایەک نییە بۆ ناردن!");
+            return;
+        }
+
+        // Prepare data for Excel
+        const data = transactions.map(t => ({
+            "جۆر": t.type === 'debt' ? "قەرزی من (دەیدەم)" : "قەرزی خەڵک (وەری دەگرم)",
+            "ناو": t.name,
+            "بڕ (دینار)": t.amount,
+            "بەروار": t.date
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Hesabat");
+        
+        // Generate filename with date
+        const today = new Date().toISOString().slice(0,10);
+        XLSX.writeFile(wb, `Hesabat_Data_${today}.xlsx`);
+    }
+
+    // ٤. فەنکشنی دروستکردنی PDF
+    function exportToPDF() {
+        if (transactions.length === 0) {
+            alert("هیچ داتایەک نییە بۆ کردن بە PDF!");
+            return;
+        }
+
+        const element = document.querySelector('.container');
+        const opt = {
+            margin:       10,
+            filename:     'Hsabat_Report.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save();
+    }
+
+    // Backup & Restore System
+    function backupData() {
+        const dataStr = JSON.stringify(transactions);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `hsabat_backup_${new Date().toISOString().slice(0,10)}.json`;
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    }
+
+    function restoreData() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        
+        input.onchange = e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+            reader.onload = readerEvent => {
+                try {
+                    const content = readerEvent.target.result;
+                    const parsedData = JSON.parse(content);
+                    
+                    if (Array.isArray(parsedData)) {
+                        if(confirm('دەتەوێت داتا کۆنەکان بسڕیتەوە (Replace) یان ئەمانە زیاد بکەیت (Merge)؟\n\nOK = جێگۆڕین (Replace)\nCancel = زیادکردن (Merge)')) {
+                            transactions = parsedData;
+                        } else {
+                            transactions = [...parsedData, ...transactions];
+                        }
+                        saveAndRender();
+                        alert('بە سەرکەوتوویی گەڕێنرایەوە!');
+                    } else {
+                        alert('فایلەکە هەڵەیە!');
+                    }
+                } catch (error) {
+                    alert('کێشەیەک هەیە لە خوێندنەوەی فایلەکە');
+                }
+            }
+        }
+        input.click();
+    }
+
+    function showInfo() {
+        const info = `
+💡 ڕێنمایی بەکارهێنان:
+
+🔴 قەرزەکانم (Debt): ئەو پارانەی تۆ قەرزاریت و دەبێت بیاندەیتەوە.
+🔵 قەرز لای خەڵک (Loan): ئەو پارانەی خەڵک قەرزاری تۆن.
+
+💾 پاشەکەوت (Backup):
+   • دەتوانیت فایلێک دابگریت کە هەموو داتاکانی تێدایە
+   • بۆ کاتێک مۆبایل دەگۆڕیت یان دەتەوێت پاشەکەوتی بکەیت
+   • ئەگەر داتاکانت لابچن، دەتوانیت بیانگەڕێنیتەوە
+
+📥 هاوردەکردنەوە (Import):
+   • فایلی پاشکۆپیت هاوردە دەکاتەوە
+   • دوو بژاردە:
+     ✅ زیادکردن: داتای نوێ زیاد دەکات بۆ ئەوانەی هەتە
+     ❌ جێگۆڕین: هەموو داتای کۆن دەسڕێتەوە
+
+💡 ڕاسپاردە:
+   • هەموو مانگێک جارێک پاشکۆپی دروست بکە
+   • فایلەکە لە شوێنێکی سەلامەت پاشەکەوت بکە
+   • داتاکانت لە localStorage وێبگەڕەکە پاشەکەوت دەکرێن
+   • ئەگەر کاشی وێبگەڕەکە پاک بکەیتەوە، داتاکان دەڕۆن!
+
+📊 ئێستا:
+   • ${transactions.length} تراکنزەکشنت هەیە
+   • کۆی داتا: ${(JSON.stringify(transactions).length / 1024).toFixed(2)} KB
+        `.trim();
+        
+        alert(info);
+    }
+</script>
+
+</body>
+</html>
+ووک
             </a>
             <a href="https://www.instagram.com/g4shtiar3601?igsh=MWJlczE1ejI3ZmM2bw==" target="_blank" class="social-link">
                 <i class="fab fa-instagram social-icon"></i> ئینستاگرام
